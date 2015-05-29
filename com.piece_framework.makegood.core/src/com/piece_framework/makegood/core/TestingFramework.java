@@ -74,8 +74,13 @@ public enum TestingFramework {
                 int startIndex = beforeMethod != null ?
                     beforeMethod.getSourceRange().getOffset() + beforeMethod.getSourceRange().getLength() :
                     type.getSourceRange().getOffset();
+
+                //gschafra, 20150529, Workaround for #1
+                int offset = method.getSourceRange().getOffset();
+                if (startIndex < 0 || offset < 0) continue;
+
                 String target = method.getSourceModule().getSource().substring(
-                    startIndex, method.getSourceRange().getOffset());
+                    startIndex, offset);
                 Pattern pattern = Pattern.compile("/\\*\\*[ |\t|\n].*@test.*\\*/", Pattern.MULTILINE + Pattern.DOTALL);
                 Matcher matcher = pattern.matcher(target);
                 return matcher.find();
